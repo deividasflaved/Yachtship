@@ -1,0 +1,30 @@
+{% extends 'marea/layout.html' %}
+
+
+{% block content %}
+    {% if form.instance.id %}
+        <h1>Update team</h1>
+    {% else %}
+        <h1 class="mb-5">Create new team</h1>
+    {% endif %}
+    <form class="form" action="
+            {% if form.instance.id %}
+                {% url 'events:update_race' view.kwargs.competition form.instance.id %}
+            {% else %}
+                {% url 'events:create_race' view.kwargs.competition %}
+            {% endif %}"
+            method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table class="table table-hover shadow-lg">
+            {{ form }}
+        </table>
+        <button class="btn btn-indeform btn-block shadow-lg mt-5" type="submit">
+            {% if form.instance.id %}
+                Update
+            {% else %}
+                Create
+            {% endif %}
+        </button>
+
+    </form>
+{% endblock content %}

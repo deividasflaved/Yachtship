@@ -1,0 +1,58 @@
+{% extends 'parea/layout.html' %}
+{% load static %}
+
+
+{% block content %}
+    <img class="mb-4 logo" src="{% static 'css/img/logo-white.svg' %}">
+
+    <form class="form login" method="post" action="{% url 'auth:login' %}">
+        {% csrf_token %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="msg {{ message.tags }} mb-3">
+                    {{ message|escape }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% if form.non_field_errors %}
+            <div class="msg error bspaces">
+                {% for error in form.non_field_errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <input id="{{ form.username.id_for_label }}" class="form-control shadow-lg" name="{{ form.username.name }}"
+                    {% if form.username.value %}value="{{ form.username.value }}"{% endif %} type="{{ form.username.field.widget.input_type }}" placeholder="Username" autofocus="">
+
+            {% if form.username.errors %}
+                <div class="msg error">
+                    {% for error in form.username.errors %}
+                        {{ error|escape }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <input id="{{ form.password.id_for_label }}" class="form-control shadow-lg" name="{{ form.password.name }}"
+                    {% if form.password.value %}value="{{ form.password.value }}"{% endif %} type="{{ form.password.field.widget.input_type }}" placeholder="Password">
+
+            {% if form.password.errors %}
+                <div class="msg error">
+                    {% for error in form.password.errors %}
+                        {{ error|escape }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <p>
+            <a href="{% url 'parea:register' %}">Create an account</a>
+        </p>
+        
+        <button class="btn btn-lg btn-indeform btn-block shadow-lg" type="submit">Login</button>
+    </form>
+{% endblock content %}

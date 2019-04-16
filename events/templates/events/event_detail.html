@@ -1,0 +1,63 @@
+{% extends 'marea/layout.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+        <div class="text-right w-100">
+            {% now "Y" as current_year %}
+
+            {% if event.event_date.year|stringformat:"i" == current_year %}
+                {% if team %}
+                    <a class="btn btn-large btn-info" href="{% url 'events:update_team' event.id team.0.id %}">
+                        Update register entry 
+                    </a>
+                {% else %}       
+                    <a class="btn btn-large btn-info" href="{% url 'events:create_team' event.id %}">
+                        Register to championship    
+                    </a>
+                {% endif %}
+            {% endif %}
+
+        </div>
+        <h1 class="card-title">{{ event.title }} 
+            {% if event.event_date.year|stringformat:"i" == current_year %}
+                <a href="{% url 'events:update' event.id %}">
+                    <img src='https://cdn0.iconfinder.com/data/icons/opensourceicons/32/edit.png'>
+                </a>
+            {% endif %}
+            
+        </h1>
+
+    <table class="table table-hover shadow-lg">
+            <thead>
+                <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Race amount</th>
+                <th scope="col">Date</th>
+                <th scope="col">Lookup</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if event.competitions.all %}
+                    {% for competition in event.competitions.all %}
+                    <tr>
+                        <td>{{ competition.title }}</td>
+                        <td>{{ competition.races.all.count }}</td>
+                        <td>{{ competition.start_date }}</td>
+                        <td>
+                            <a href="{% url 'events:competition_detail' competition.id %}">
+                                <img src='https://www.shareicon.net/data/32x32/2015/12/22/691546_view_512x512.png'>
+
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">There are no competitions.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+{% endblock content %}

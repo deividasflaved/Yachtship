@@ -1,0 +1,39 @@
+main.container {
+    min-height: calc(100vh - 56px - 30px);
+}
+
+.bg-indeform {
+    background-color: #662c91;
+}
+
+
+/* PAGINATION */
+.page-item .page-link {
+    color: #fff;
+    background-color: #662c91;
+    border-color: #662c91;
+    border-left-color: rgba(255, 255, 255, .25);
+    border-right-color: rgba(255, 255, 255, .25);
+
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.page-item:first-child .page-link {
+    border-left-color: #662c91;
+    border-right-color: rgba(255, 255, 255, .25);
+}
+
+.page-item:last-child .page-link {
+    border-left-color: rgba(255, 255, 255, .25);
+    border-right-color: #662c91;
+}
+
+.page-item.active .page-link {
+    background-color: rgba(102, 44, 145, 0.5);
+    border-color: rgba(102, 44, 145, 0);
+}
+
+.page-item .page-link:hover {
+    background-color: rgba(255, 255, 255, .25);
+    border-color: rgba(255, 255, 255, 0);
+}

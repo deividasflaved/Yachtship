@@ -1,0 +1,28 @@
+{% extends 'marea/layout.html' %}
+{% load static %}
+
+
+{% block content %}
+    {% if event_list.0.event_date.year == 2019 %}
+    <h1 class="mb-2">Current events</h1>
+    <form action="{% url 'events:create' %}">
+        <input class="btn btn-indeform btn-block shadow-lg mt-2" type="submit" value="Create new event" />
+    </form>
+    {% else %}
+        <h1 class="mb-2">Previous events</h1>
+    {% endif %}
+        {% if event_list %}
+            <div class="grid mb-5">
+            {% for event in event_list %}
+                <div>
+                    <img class="card-img-top" src="{% if event.thumbnail %}{{ event.thumbnail.url }}{% elif event.image %}{{ event.image.url }}{% else %}{% static 'css/img/placeholder.png' %}{% endif %}">
+                    <br> <a href="{% url 'events:detail' event.id %}">{{ event.title }}</a>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <h5>There are no events.</h5>
+        {% endif %}
+
+    {% include 'marea/pagination.html' %}
+{% endblock content %}

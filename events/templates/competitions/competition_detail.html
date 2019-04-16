@@ -1,0 +1,50 @@
+{% extends 'marea/layout.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+    <a class="btn btn-large btn-info" href="{% url 'events:create_race' competition.id %}">
+        Add race   
+    </a>
+    <h1 class="card-title">{{ competition.event.title }}<br>{{competition.title}}</h1>
+
+    <table class="table table-hover shadow-lg">
+            <thead>
+                <tr>
+                <th scope="col">Race</th>
+                <th scope="col">Start</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Winner</th>
+                <th scope="col">Race details</th>
+                <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% if competition.races.all %}
+                    {% for race in competition.races.all %}
+                    <tr>
+                        <td>{{ race.title }}</td>
+                        <td>{{ race.start_date }}</td>
+                        <td>{{ race.duration }}</td>
+                        <td>{{ race.winner }}</td>
+                        <td>
+                            <img src='https://www.shareicon.net/data/32x32/2015/12/22/691546_view_512x512.png'>
+                        </td>
+                        <td>
+                            <a href="{% url 'events:update_race' competition.id race.id %}">
+                                <img src='https://cdn0.iconfinder.com/data/icons/opensourceicons/32/edit.png'>
+                            </a>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4">There are no competitions.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+{% endblock content %}

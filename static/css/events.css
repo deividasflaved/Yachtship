@@ -1,0 +1,100 @@
+.card {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.card-img-top {
+    width: auto;
+    max-height: 256px;
+    margin-top: 20px;
+    align-self: center;
+}
+
+.list-img {
+    width: auto;
+    max-height: 30px;
+    align-self: center;
+}
+
+
+div.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px 60px;
+  
+}
+div.row {
+    align-items: flex-end;
+    float: inline-end;
+  }
+div.row.header{
+    float:center;
+}
+
+div.header{
+    display: inline-block;
+    display: inline;    
+}
+
+td.delete { 
+    display: none; 
+}
+
+.choices__list--dropdown{
+    color:black;
+    float: unset;
+}
+.choices__list--multiple{
+    float:inline-start;
+}
+.choices__input{
+    float:inline-end;
+}
+li {
+    list-style: none;
+}
+.scene-canvas{
+    line-height: 0;
+}
+.bottom-collapse {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    line-height: normal;
+    pointer-events: none;
+}
+.side-collapse {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+}
+.btn-group {
+    left: 30%;
+    pointer-events: all;
+}
+.btn-sidebar {
+    pointer-events: all;
+}
+.sidebar {
+    height: 100%;
+    overflow:auto;
+    float:left;
+    transition: width .35s;
+    line-height: 25px;
+    color: black;
+  }
+  
+  .sidebar {
+    background:white;
+    width: 20%;
+  }
+  
+  .sidebar.collapsed {
+    width: 0;
+  }
+.graph-canvas{
+    background: white;
+}
+  
