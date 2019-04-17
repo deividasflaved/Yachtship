@@ -1,6 +1,7 @@
 const doc = document.getElementById('start');
 // const filesLoc = "http://127.0.0.1:8000/static/other/";
-const filesLoc = "http://192.168.1.187:8000/static/other/";
+// const filesLoc = "http://192.168.1.187:8000/static/other/";
+const filesLoc = "http://deividux652.pythonanywhere.com/static/other/";
 const canvasId = "canvas";
 const sidebar = document.getElementById('sidebar');
 const button = document.getElementById('toggle');
