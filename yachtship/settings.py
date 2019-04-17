@@ -25,7 +25,7 @@ SECRET_KEY = '8j+t37u2q-b9hv5wsu-n-*@vzi5q3gwq*_=tz9-89m(ukhax2w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.2.185','127.0.0.1','192.168.1.187']
+ALLOWED_HOSTS = ['192.168.2.185','127.0.0.1','192.168.1.187','deividux652.pythonanywhere.com']
 
 
 # Application definition
@@ -67,7 +67,7 @@ ROOT_URLCONF = 'yachtship.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        
+
         'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -90,14 +90,13 @@ WSGI_APPLICATION = 'yachtship.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'yachtship',
-        # NOTE: Update MySQL user credentials with user (which can access django_test database) credentials
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'NAME': 'deividux652$yachtship',
+        'USER': 'deividux652',
+        'PASSWORD': 'D19970529s',
+        'HOST': 'deividux652.mysql.pythonanywhere-services.com',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+        },
     }
 }
 
@@ -140,9 +139,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]   
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+STATIC_ROOT = "/home/deividux652/Yachtship/static"
 DATE_FORMAT = 'Y-m-d'
 DATE_INPUT_FORMATS =[
     '%Y-%m-%d','%m/%d/%Y', '%m/%d/%y'

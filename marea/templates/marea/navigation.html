@@ -1,7 +1,7 @@
 {% load static %}
 
 
-{% url 'marea:home' as home_page %}                    
+{% url 'marea:home' as home_page %}
 
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-indeform shadow-lg">
@@ -21,14 +21,14 @@
             </li>
         </ul>
 
-        
+
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ user.first_name }} {{ user.last_name }}
+                {{ user.username }}
             </a>
              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 <a class="dropdown-item" href="{% url 'auth:logout' %}">Logout</a>
-            </div> 
+            </div>
         </li>
     </div>
 </nav>
