@@ -31,7 +31,7 @@ class World {
     }
 
     initSkybox() {
-        let geometry = new THREE.CubeGeometry(9000, 9000, 9000);
+        let geometry = new THREE.CubeGeometry(9500, 9500, 9500);
         let cubeMaterials = [
             new THREE.MeshBasicMaterial({
                 map: new THREE.TextureLoader().load(filesLoc + 'nightsky_ft.png'),

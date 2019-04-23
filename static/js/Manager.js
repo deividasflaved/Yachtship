@@ -88,44 +88,50 @@ class Manager {
         requestAnimationFrame(this.animate);
         this.world.water.material.uniforms["time"].value += 1.0 / 60.0;
         this.renderer.render(this.scene, this.camera);
+        TWEEN.update();
     }
 
-
-    test(){
+    test() {
         let testElem = document.getElementById("sidebar");
-        this.yachts.forEach((yacht)=>{
+        this.yachts.forEach((yacht) => {
             testElem.innerText += '\n' + yacht.yacht.name;
-            console.log(yacht);
+            // console.log(yacht);
         });
     }
-    test2(){
+    test2() {
         //test
-        this.a = [[],[]];
-        this.b = [[],[]];
+        this.a = [
+            [],
+            []
+        ];
+        this.b = [
+            [],
+            []
+        ];
         this.counter = 0;
         //test
         let ctx = canvastest1.getContext("2d");
-        ctx.canvas.width  = window.innerWidth;
+        ctx.canvas.width = window.innerWidth;
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.beginPath();
         ctx.moveTo(30, 75);
-        for(let i = 1; i < 26; i++){
-            let x = this.getRandom(50*i,50*(i+1));
-            let y = this.getRandom(10,130);
+        for (let i = 1; i < 26; i++) {
+            let x = this.getRandom(50 * i, 50 * (i + 1));
+            let y = this.getRandom(10, 130);
             ctx.lineTo(x, y);
             this.a[0].push(x);
             this.a[1].push(y);
         }
-        
+
         ctx.strokeStyle = 'blue';
         ctx.lineWidth = 3;
-        ctx.stroke(); 
+        ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(30, 100);
-        for(let i = 1; i < 26; i++){
-            let x = this.getRandom(50*i,50*(i+1));
-            let y = this.getRandom(10,130);
+        for (let i = 1; i < 26; i++) {
+            let x = this.getRandom(50 * i, 50 * (i + 1));
+            let y = this.getRandom(10, 130);
             ctx.lineTo(x, y);
             this.b[0].push(x);
             this.b[1].push(y);
@@ -133,12 +139,10 @@ class Manager {
         ctx.strokeStyle = 'red';
         ctx.setLineDash([5, 3]);
         ctx.lineWidth = 3;
-        ctx.stroke(); 
+        ctx.stroke();
 
-        
-        
         ctx = canvastest2.getContext("2d");
-        ctx.canvas.width  = window.innerWidth;
+        ctx.canvas.width = window.innerWidth;
         // ctx.moveTo(100, 10);
         // ctx.lineTo(150, 100);
         // ctx.lineTo(300,20);
@@ -146,41 +150,41 @@ class Manager {
         // ctx.stroke(); 
 
         ctx = canvastest3.getContext("2d");
-        ctx.canvas.width  = window.innerWidth;
+        ctx.canvas.width = window.innerWidth;
         // ctx.moveTo(100, 10);
         // ctx.lineTo(200, 100);
         // ctx.lineTo(300,100);
         // ctx.lineTo(500,70);
         // ctx.stroke(); 
     }
-    test3(){
+    test3() {
         let ctx = canvastest1.getContext("2d");
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         ctx.beginPath();
         ctx.moveTo(30, 75);
-        for(let i = 1; i < 26; i++){
-            ctx.lineTo(this.a[0][i-1], this.a[1][i-1]);
+        for (let i = 1; i < 26; i++) {
+            ctx.lineTo(this.a[0][i - 1], this.a[1][i - 1]);
         }
-        
+
         ctx.strokeStyle = 'blue';
         ctx.lineWidth = 3;
         ctx.setLineDash([]);
-        ctx.stroke(); 
+        ctx.stroke();
 
         ctx.beginPath();
         ctx.moveTo(30, 100);
-        for(let i = 1; i < 26; i++){
-            ctx.lineTo(this.b[0][i-1], this.b[1][i-1]);
+        for (let i = 1; i < 26; i++) {
+            ctx.lineTo(this.b[0][i - 1], this.b[1][i - 1]);
         }
         ctx.strokeStyle = 'red';
         ctx.setLineDash([5, 3]);
         ctx.lineWidth = 3;
-        ctx.stroke(); 
+        ctx.stroke();
 
         ctx.beginPath();
-        ctx.moveTo(30+(10*this.counter),0);
-        ctx.lineTo(30+(10*this.counter),150);
+        ctx.moveTo(30 + (10 * this.counter), 0);
+        ctx.lineTo(30 + (10 * this.counter), 150);
         ctx.strokeStyle = 'black';
         ctx.setLineDash([5, 3]);
         ctx.lineWidth = 3;
@@ -191,5 +195,5 @@ class Manager {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
-      }
+    }
 }
