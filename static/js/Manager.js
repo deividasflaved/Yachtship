@@ -1,44 +1,55 @@
 const doc = document.getElementById('start');
 // const filesLoc = "http://127.0.0.1:8000/static/other/";
 // const filesLoc = "http://192.168.1.187:8000/static/other/";
-const filesLoc = "http://deividux652.pythonanywhere.com/static/other/";
+const filesLoc = window.location.protocol + "//" + window.location.host + "/static/other/";
 const canvasId = "canvas";
 const sidebar = document.getElementById('sidebar');
 const button = document.getElementById('toggle');
-const canvastest1 = document.getElementById('test-canvas1');
-const canvastest2 = document.getElementById('test-canvas2');
-const canvastest3 = document.getElementById('test-canvas3');
+// const canvastest1 = document.getElementById('test-canvas1');
+// const canvastest2 = document.getElementById('test-canvas2');
+// const canvastest3 = document.getElementById('test-canvas3');
+// const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+// 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+// 		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
+// 		  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+// 		  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
+// 		  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+// 		  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
+// 		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+// 		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+//           '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+const colorArray = ['#ff00f0', '#21ff00', '#f7ff00'];
 
 class Manager {
     constructor() {
-        
         this.world = new World(this);
         this.scene = new THREE.Scene();
         this.renderer = new THREE.WebGLRenderer();
-
         this.yachts = [];
-
+        this.replay = new Replay(this);
+        this.usedColors = [];
+        this.path = null;
         this.animate = this.animate.bind(this);
 
         this.loader = new THREE.OBJLoader();
 
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 7000);
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 14000);
         this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
 
         button.addEventListener('click', _ => {
             sidebar.classList.toggle('collapsed');
-          });
+        });
     }
 
     initScene() {
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(window.innerWidth - (window.innerWidth * 0.10), window.innerHeight - (window.innerHeight * 0.10));
         let container = document.getElementById(canvasId);
         container.appendChild(this.renderer.domElement);
         window.addEventListener('resize', () => {
-            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setSize(window.innerWidth - (window.innerWidth * 0.10), window.innerHeight - (window.innerHeight * 0.10));
             this.camera.aspect = window.innerWidth / window.innerHeight;
             this.camera.updateProjectionMatrix();
-          });
+        });
     }
 
     initCameraPos() {
@@ -47,7 +58,7 @@ class Manager {
         this.camera.rotation.x = -45;
         this.controls.update();
     }
-    
+
     initBasics() {
         this.initScene();
         this.world.initLight();
@@ -56,10 +67,9 @@ class Manager {
         this.initCameraPos();
     }
 
-
-    loadObject(objLoc) {
+    loadObject(objLoc, obj, callback = null) {
         let material = new THREE.MeshPhongMaterial({
-            color: 0x000055,
+            color: 0xffffff,
             wireframe: false
         });
         this.loader.load(
@@ -75,12 +85,53 @@ class Manager {
                 mesh.rotation.x = -Math.PI / 2;
                 let temp = new Yacht(this);
                 temp.addYacht(mesh);
-                // ⌄⌄⌄⌄⌄⌄⌄temporary for testing purposes⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄⌄
-                temp.yacht.name = "LTU" + this.getRandom(10000,99999).toString();
-                // ^^^^^^^temporary for testing purposes^^^^^^^^^^^^^
-                this.yachts.push(temp);
-                this.yachts[this.yachts.length - 1].addToScene();
-                this.yachts[this.yachts.length - 1].moveYacht();
+                temp.yacht.name = obj['team_name'];
+                temp.calcPath(Algorithm.cleanUpGpsData(gpsData, obj['id']));
+                this.path = obj;
+                if(temp.path.length != 0) {
+                    let rnd = Math.floor(Math.random() * colorArray.length);
+
+                    while(this.usedColors.includes(rnd))
+                        rnd = Math.floor(Math.random() * colorArray.length);
+                    this.usedColors.push(rnd);
+                    temp.color = rnd;
+
+                    temp.id = this.yachts.length;
+                    temp.yacht.scale.set(2, 2, 2);
+                    this.path = temp.path.slice();
+                    this.yachts.push(temp);
+                    this.yachts[this.yachts.length - 1].addToScene();
+                    this.yachts[this.yachts.length - 1].moveYachtInit();
+                    this.yachts[this.yachts.length - 1].initTrail();
+                    
+                }
+                // console.log(this.yachts.length);
+                ////////////////////////////
+                else if (this.yachts.length == 2)
+                {
+                    console.log(temp.path.length);
+                    let rnd = Math.floor(Math.random() * colorArray.length);
+
+                    while(this.usedColors.includes(rnd))
+                        rnd = Math.floor(Math.random() * colorArray.length);
+                    this.usedColors.push(rnd);
+                    temp.color = rnd;
+                    temp.calcPath(Algorithm.cleanUpGpsData(gpsData, 1), true);
+                    // temp.path.forEach((pos, i)=>{
+                    //     temp.path[i].x += Algorithm.getRandom(100,200);
+                    //     temp.path[i].y += Algorithm.getRandom(100,200);
+                    // });
+                    temp.id = this.yachts.length;
+                    temp.yacht.scale.set(2, 2, 2);
+                    this.yachts.push(temp);
+                    this.yachts[this.yachts.length - 1].addToScene();
+                    this.yachts[this.yachts.length - 1].moveYachtInit();
+                    this.yachts[this.yachts.length - 1].initTrail();
+                    // this.path = temp.path;
+                }
+                //////////////////////////
+                console.log(temp.path);
+                if (callback !== null) callback();
             });
     }
 
@@ -88,14 +139,30 @@ class Manager {
         requestAnimationFrame(this.animate);
         this.world.water.material.uniforms["time"].value += 1.0 / 60.0;
         this.renderer.render(this.scene, this.camera);
-        TWEEN.update();
+    }
+
+    removeUnusedYachts(){
+        this.yachts.forEach((yacht)=>{
+           if(yacht.path <= 0) {
+               this.scene.remove(yacht);
+           }
+        });
     }
 
     test() {
-        let testElem = document.getElementById("sidebar");
+        let testElem = document.getElementById("sidebarTableBody");
+        let count = 1;
+        let speedId = 0;
+        let trId = 0;
+        let gapId = 0;
         this.yachts.forEach((yacht) => {
-            testElem.innerText += '\n' + yacht.yacht.name;
-            // console.log(yacht);
+            testElem.innerHTML += "<tr id=\'trId" + trId++ + "\'>" +
+                "<td class=\"td-border\" style='background-color: " + colorArray[yacht.color] + "'>" + count++ + "</td>" +
+                "<td class=\"td-border\">" + yacht.yacht.name + "</td>" +
+                "<td class=\"td-border\" id=\'speed" + speedId++ + "\'>" + Algorithm.getRandom(10,50) + "</td>" +
+                "<td class=\"td-border\" id=\'gap" + gapId++ + "\'>0</td>" +
+                "</tr>"
+                // '\n' + yacht.yacht.name;
         });
     }
     test2() {
@@ -111,13 +178,13 @@ class Manager {
         this.counter = 0;
         //test
         let ctx = canvastest1.getContext("2d");
-        ctx.canvas.width = window.innerWidth;
+        ctx.canvas.width = window.innerWidth * 0.9;
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         ctx.beginPath();
         ctx.moveTo(30, 75);
         for (let i = 1; i < 26; i++) {
-            let x = this.getRandom(50 * i, 50 * (i + 1));
-            let y = this.getRandom(10, 130);
+            let x = Algorithm.getRandom(50 * i, 50 * (i + 1));
+            let y = Algorithm.getRandom(10, 130);
             ctx.lineTo(x, y);
             this.a[0].push(x);
             this.a[1].push(y);
@@ -130,8 +197,8 @@ class Manager {
         ctx.beginPath();
         ctx.moveTo(30, 100);
         for (let i = 1; i < 26; i++) {
-            let x = this.getRandom(50 * i, 50 * (i + 1));
-            let y = this.getRandom(10, 130);
+            let x = Algorithm.getRandom(50 * i, 50 * (i + 1));
+            let y = Algorithm.getRandom(10, 130);
             ctx.lineTo(x, y);
             this.b[0].push(x);
             this.b[1].push(y);
@@ -142,7 +209,7 @@ class Manager {
         ctx.stroke();
 
         ctx = canvastest2.getContext("2d");
-        ctx.canvas.width = window.innerWidth;
+        ctx.canvas.width = window.innerWidth*0.9;
         // ctx.moveTo(100, 10);
         // ctx.lineTo(150, 100);
         // ctx.lineTo(300,20);
@@ -150,7 +217,7 @@ class Manager {
         // ctx.stroke(); 
 
         ctx = canvastest3.getContext("2d");
-        ctx.canvas.width = window.innerWidth;
+        ctx.canvas.width = window.innerWidth*0.9;
         // ctx.moveTo(100, 10);
         // ctx.lineTo(200, 100);
         // ctx.lineTo(300,100);
@@ -190,10 +257,5 @@ class Manager {
         ctx.lineWidth = 3;
         ctx.stroke();
         this.counter++;
-    }
-    getRandom(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
     }
 }

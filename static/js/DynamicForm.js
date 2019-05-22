@@ -74,7 +74,7 @@ class DynamicForm {
                 removeItemButton: true,
                 searchFields: ['label'],
                 placeholderValue: 'Select referees',
-                position: 'inherit',
+                position: 'inherit'
             });
             i++;
         }

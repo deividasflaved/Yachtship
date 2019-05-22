@@ -8,7 +8,13 @@
     <form action="{% url 'events:delete' event.id %}" method="post">
         {% csrf_token %}
 
-            <h5 class="mb-5">Are you sure you want to delete <span class="font-italic font-weight-bold">{{ event.title }}</span>?</h3>
+            <h5 class="mb-5">
+                Are you sure you want to delete
+                <span class="font-italic font-weight-bold">
+                    {{ event.title }}
+                </span>
+                ?
+            </h5>
         
             <div>
                 <a class="btn btn-indeform" href="{% url 'events:detail' event.id %}" role="button">Cancel</a>

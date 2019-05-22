@@ -1,13 +1,14 @@
+"""Create your forms here."""
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
-
-
-
-UserModel = get_user_model()
+USERMODEL = get_user_model()
 
 
 class RegisterForm(UserCreationForm):
+    """Custom registration form"""
+
     class Meta:
-        model = UserModel
+        model = USERMODEL
         fields = ('first_name', 'email', 'username')

@@ -18,7 +18,9 @@
         {% csrf_token %}
         
         <div class="form-group">
-            <input class="form-control shadow-lg" type="{{ form.title.field.widget.input_type }}" name="{{ form.title.name }}" placeholder="Title" value="{% if form.title.value %}{{ form.title.value }}{% endif %}">
+            <input class="form-control shadow-lg" type="{{ form.title.field.widget.input_type }}"
+                   name="{{ form.title.name }}" placeholder="Title"
+                   value="{% if form.title.value %}{{ form.title.value }}{% endif %}">
         
             {% if form.title.errors %}
                 <div class="msg error">
@@ -29,7 +31,9 @@
             {% endif %}
         </div>
         <div class="form-group">
-            <input class="form-control shadow-lg" type="{{ form.event_date.field.widget.input_type }}" name="{{ form.event_date.name }}" placeholder="123.45" step=".01" value="{% if form.event_date.value %}{{ form.event_date.value }}{% endif %}">
+            <input class="form-control shadow-lg" type="{{ form.event_date.field.widget.input_type }}"
+                   name="{{ form.event_date.name }}" placeholder="2019-05-29" step=".01"
+                   value="{% if form.event_date.value %}{{ form.event_date.value }}{% endif %}">
         
             {% if form.event_date.errors %}
                 <div class="msg error">
@@ -40,7 +44,10 @@
             {% endif %}
         </div>
         <div class="form-group">
-            <textarea class="form-control shadow-lg" name="{{ form.description.name }}" placeholder="Description" rows="3">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+            <textarea class="form-control shadow-lg"
+                      name="{{ form.description.name }}" placeholder="Description" rows="3">
+                {% if form.description.value %}{{ form.description.value }}{% endif %}
+            </textarea>
         
             {% if form.description.errors %}
                 <div class="msg error">
@@ -52,7 +59,8 @@
         </div>
         <div class="form-group">
             <div class="custom-file">
-                <input id="{{ form.image.id_for_label }}" class="custom-file-input" name="{{ form.image.name }}" type="{{ form.image.field.widget.input_type }}">
+                <input id="{{ form.image.id_for_label }}" class="custom-file-input"
+                       name="{{ form.image.name }}" type="{{ form.image.field.widget.input_type }}">
                 <label for="{{ form.image.id_for_label }}" class="custom-file-label">Upload image</label>
             </div>
 

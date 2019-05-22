@@ -1,0 +1,92 @@
+{% extends 'marea/layout.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="scene-canvas position-relative" id="canvas"> 
+    <div class="timeline">
+        <div class="img-wrapper">
+    <div class="btn-img" id="play"></div>
+            </div>
+    <button class="btn btn-info btn-info1" id="plays">Change speed</button>
+<input type="range" min="100" max="10000" value="500" class="slider timeline-slider" id="myRange">
+        <div class="elapsed-time" id="elapsedTime">Elapsed:<br>00:00:00 </div>
+</div>
+    <div class="side-collapse">
+        <div class="sidebar collapsed" id="sidebar">
+            <table class="tournament-table">
+                <thead class="thead-body">
+                    <tr>
+                        <th class="th-border th-pos">Pos</th>
+                        <th class="th-border">Team name</th>
+                        <th class="th-border">Speed (kn)</th>
+                        <th class="th-border">Gap to leader(m)</th>
+                    </tr>
+                </thead>
+                <tbody id="sidebarTableBody">
+
+                </tbody>
+            </table>
+        </div>
+        <button class="btn btn-primary btn-sidebar" id="toggle">Tournament table</button>
+    </div>
+
+{#    <div class="bottom-collapse"> #}
+{#        <div class="btn-group" role="group">#}
+{##}
+{#            <button type="button" class="btn btn-primary" data-toggle="collapse" #}
+{#            data-target="#windCanvas" aria-expanded="false" #}
+{#            aria-controls="windCanvas">#}
+{#                Wind#}
+{#            </button>#}
+{##}
+{#            <button type="button" class="btn btn-primary" data-toggle="collapse" #}
+{#            data-target="#detailsCanvas" aria-expanded="false" #}
+{#            aria-controls="detailsCanvas">#}
+{#                Details#}
+{#            </button>#}
+{##}
+{#            <button type="button" class="btn btn-primary" data-toggle="collapse" #}
+{#            data-target="#compareCanvas" aria-expanded="false" #}
+{#            aria-controls="compareCanvas">#}
+{#                Compare#}
+{#            </button>#}
+{##}
+{#        </div>#}
+{##}
+{#        <div>#}
+{##}
+{#            <div class="collapse" id="windCanvas">#}
+{#                <canvas class="graph-canvas" id="test-canvas1"></canvas>#}
+{#            </div>#}
+{##}
+{#            <div class="collapse" id="detailsCanvas">#}
+{#                    <canvas class="graph-canvas" id="test-canvas2"></canvas>#}
+{#            </div>#}
+{##}
+{#            <div class="collapse" id="compareCanvas">#}
+{#                    <canvas class="graph-canvas" id="test-canvas3"></canvas>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{#    </div> #}
+</div>
+
+<script>
+    let gpsData = JSON.parse('{{ coordinates|safe }}');
+    let teams = JSON.parse('{{ teams|safe }}');
+</script>
+<script src="{% static 'js/algorithm.js' %}"></script>
+<script src="{% static 'js/Replay.js' %}"></script>
+<script src="{% static 'js/Clock.js' %}"></script>
+<script src="{% static 'js/lib/Tween.js' %}"></script>
+<script src="{% static 'js/lib/three.js' %}"></script>
+<script src="{% static 'js/OBJLoader.js' %}"></script>
+<script src="{% static 'js/OrbitControls.js' %}"></script>
+<script src="{% static 'js/Water.js' %}"></script>
+<script src="{% static 'js/World.js' %}"></script>
+<script src="{% static 'js/Yacht.js' %}"></script>
+<script src="{% static 'js/Manager.js' %}" ></script>
+<script src="{% static 'js/App.js' %}" ></script>
+
+{% endblock content %}

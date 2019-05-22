@@ -9,23 +9,29 @@
 
             {% if event.event_date.year|stringformat:"i" == current_year %}
                 {% if team %}
-                    <a class="btn btn-large btn-info" href="{% url 'events:update_team' event.id team.0.id %}">
-                        Update register entry 
-                    </a>
-                {% else %}       
-                    <a class="btn btn-large btn-info" href="{% url 'events:create_team' event.id %}">
-                        Register to championship    
-                    </a>
+                    {% if perms.events.change_team %}
+                        <a class="btn btn-large btn-info" href="{% url 'events:update_team' event.id team.0.id %}">
+                            Update register entry
+                        </a>
+                    {% endif %}
+                {% else %}
+                    {% if perms.events.add_team %}
+                        <a class="btn btn-large btn-info" href="{% url 'events:create_team' event.id %}">
+                            Register to championship
+                        </a>
+                    {% endif %}
                 {% endif %}
             {% endif %}
 
         </div>
-        <h1 class="card-title">{{ event.title }} 
+        <h1 class="card-title">{{ event.title }}
+        {% if perms.events.change_event %}
             {% if event.event_date.year|stringformat:"i" == current_year %}
                 <a href="{% url 'events:update' event.id %}">
                     <img src='https://cdn0.iconfinder.com/data/icons/opensourceicons/32/edit.png'>
                 </a>
             {% endif %}
+        {% endif %}
             
         </h1>
 

@@ -3,13 +3,24 @@
 
 
 {% block content %}
-    {% if event_list.0.event_date.year == 2019 %}
-    <h1 class="mb-2">Current events</h1>
-    <form action="{% url 'events:create' %}">
-        <input class="btn btn-indeform btn-block shadow-lg mt-2" type="submit" value="Create new event" />
-    </form>
+    {% if event_list %}
+        {% if event_list.0.event_date.year == 2019 %}
+            <h1 class="mb-2">Current events</h1>
+            {% if perms.events.add_event %}
+                <form action="{% url 'events:create' %}">
+                    <input class="btn btn-indeform btn-block shadow-lg mt-2" type="submit" value="Create new event" />
+                </form>
+            {% endif %}
+        {% else %}
+            <h1 class="mb-2">Previous events</h1>
+        {% endif %}
     {% else %}
-        <h1 class="mb-2">Previous events</h1>
+        <h1 class="mb-2">Events</h1>
+        {% if perms.events.add_event %}
+            <form action="{% url 'events:create' %}">
+                <input class="btn btn-indeform btn-block shadow-lg mt-2" type="submit" value="Create new event" />
+            </form>
+        {% endif %}
     {% endif %}
         {% if event_list %}
             <div class="grid mb-5">

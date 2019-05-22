@@ -1,30 +1,50 @@
-var yachtsCount = 1;
-var timeToWait = yachtsCount * 500;
+const yachtsCount = teams.length;
+const timeToWait = yachtsCount * 500;
 
-var manage = new Manager();
+const x = 575.971737432468;
+const y = 1173.3485003119881;
+const x1 = 641.87026016711;
+const y1 = -2221.313902258259;
+
+
+let manage = new Manager();
 manage.initBasics();
 manage.animate();
-for (var x = 0; x < yachtsCount; x++) {
-    manage.loadObject(filesLoc + "yacht2.obj");
+
+var btn = document.getElementById("play");
+var btn2 = document.getElementById("plays");
+
+manage.replay.slider.oninput = function() {
+  manage.replay.changeTime(manage.replay.slider.value / 100);
+  // console.log(manage.replay.slider.value / 100)
 }
 
-setTimeout(() => manage.test(), timeToWait);
-manage.test2();
-var interval;
-setTimeout(function() {
-    manage.yachts[0].calcPath();
-    console.log(manage.yachts[0].path);
-    interval = setInterval(function() {
-        work();
-    }, 1000);
-}, timeToWait + 500);
-var j = 0;
+for (let i = 0; i < yachtsCount; i++) {
+    if(i === yachtsCount - 1)
+        manage.loadObject(filesLoc + "yacht2.obj", teams[i],() =>
+        {
+            manage.test();
+            // manage.test2()
+            manage.replay.initSpeedElems();
+            manage.replay.loop();
 
-function work() {
-    if (j > 74) {
-        clearInterval(interval);
-    } else {
-        manage.yachts[0].moveYachtTween(manage.yachts[0].path[j]);
-        j++;
-    }
+            btn.addEventListener('click', () => {
+                if(!manage.replay.paused){
+                    btn.classList.add("btn-img-pause");
+                    manage.replay.stopLoop();
+                    manage.replay.paused = true;
+
+                }
+                else{
+                    btn.classList.remove("btn-img-pause");
+                    manage.replay.startLoop();
+                    manage.replay.paused = false;
+                }
+            });
+            btn2.addEventListener('click', () => {
+                manage.replay.changeSpeed();
+            });
+        });
+    else
+        manage.loadObject(filesLoc + "yacht2.obj", teams[i]);
 }

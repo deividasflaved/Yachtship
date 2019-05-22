@@ -74,6 +74,12 @@ main.container {
     color: #fff;
 }
 
+.form-control-split {
+    width: 46%;
+    margin-inline: 2%;
+    display: inline;
+}
+
 .form-control::placeholder {
     color: #fff;
 }

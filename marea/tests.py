@@ -1,3 +1,4 @@
-from django.test import TestCase
+"""Place your tests here"""
+# from django.test import TestCase
 
 # Create your tests here.

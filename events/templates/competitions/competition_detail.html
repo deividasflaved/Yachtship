@@ -4,9 +4,11 @@
 
 
 {% block content %}
+    {% if perms.events.add_race %}
     <a class="btn btn-large btn-info" href="{% url 'events:create_race' competition.id %}">
         Add race   
     </a>
+    {% endif %}
     <h1 class="card-title">{{ competition.event.title }}<br>{{competition.title}}</h1>
 
     <table class="table table-hover shadow-lg">
@@ -17,7 +19,9 @@
                 <th scope="col">Duration</th>
                 <th scope="col">Winner</th>
                 <th scope="col">Race details</th>
-                <th scope="col">Edit</th>
+                {% if perms.events.change_race %}
+                    <th scope="col">Edit</th>
+                {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -29,19 +33,23 @@
                         <td>{{ race.duration }}</td>
                         <td>{{ race.winner }}</td>
                         <td>
-                            <img src='https://www.shareicon.net/data/32x32/2015/12/22/691546_view_512x512.png'>
-                        </td>
-                        <td>
-                            <a href="{% url 'events:update_race' competition.id race.id %}">
-                                <img src='https://cdn0.iconfinder.com/data/icons/opensourceicons/32/edit.png'>
+                            <a href="{% url 'events:replay' competition.id race.id %}">
+                                <img src='https://www.shareicon.net/data/32x32/2015/12/22/691546_view_512x512.png'>
                             </a>
                         </td>
+                        {% if perms.events.change_race %}
+                            <td>
+                                <a href="{% url 'events:update_race' competition.id race.id %}">
+                                    <img src='https://cdn0.iconfinder.com/data/icons/opensourceicons/32/edit.png'>
+                                </a>
+                            </td>
+                        {% endif %}
 
                     </tr>
                     {% endfor %}
                 {% else %}
                     <tr>
-                        <td colspan="4">There are no competitions.</td>
+                        <td colspan="6">There are no races.</td>
                     </tr>
                 {% endif %}
             </tbody>
