@@ -8,7 +8,6 @@ class Yacht {
         this.t = 0, this.dt = 0.01;
         this.startTime = 0; this.duration = 5000;
         this.trail = null;
-        this.ind = 0;
         // this.counter = 0;
     }
 
@@ -19,22 +18,6 @@ class Yacht {
 
     addToScene() {
         this.manager.scene.add(this.yacht);
-    }
-
-    initTrail(){
-        let material = new THREE.LineBasicMaterial( { color: colorArray[this.color] } );
-        material.linewidth = 2; 
-        let geometry = new THREE.BufferGeometry();
-        let positions = new Float32Array( 100000 * 3 ); // 3 vertices per point
-	    geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-
-	// drawcalls
-	    let drawCount = 0; // draw the first 2 points, only
-        geometry.setDrawRange( 0, 0 );
-        geometry.dynamic = true;
-        // geometry.vertices.push(new THREE.Vector3(this.path[0], 2, this.path[0]));
-        this.trail = new THREE.Line( geometry, material );
-        this.manager.scene.add(this.trail);
     }
 
     moveYacht(pos1, pos2, t) {
@@ -57,14 +40,10 @@ class Yacht {
     setRotation(newX, newY, newZ){
         this.yacht.rotation.z = newZ;
     }
-    calcPath(gpsData, check) {
+    calcPath(gpsData) {
         let path = [];
         for (let i = 0; i < gpsData.length; i++) {
             path[i] = Algorithm.getXY(gpsData[i].latitude, gpsData[i].longitude);
-            if(check){
-                path[i].x += Algorithm.getRandom(200,250);
-                path[i].y += Algorithm.getRandom(200,250);
-            }
             path[i].time = gpsData[i].time;
             if (i !== 0)
                 path[i].a = Algorithm.getAngle(path[i - 1], path[i]);

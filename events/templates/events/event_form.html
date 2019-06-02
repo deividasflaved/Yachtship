@@ -45,9 +45,9 @@
         </div>
         <div class="form-group">
             <textarea class="form-control shadow-lg"
-                      name="{{ form.description.name }}" placeholder="Description" rows="3">
-                {% if form.description.value %}{{ form.description.value }}{% endif %}
-            </textarea>
+                      name="{{ form.description.name }}" placeholder="Description" rows="3">{% if form.description.value %}{{ form.description.value }}
+{% endif %}
+</textarea>
         
             {% if form.description.errors %}
                 <div class="msg error">

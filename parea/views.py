@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
+from django.contrib.auth.models import Group
 # , logout as auth_logout
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -69,6 +70,7 @@ class APILoginView(FormView):
                     return JsonResponse(data)
             data['is_referee'] = 'false'
         except self.model_competition.DoesNotExist:
+            data['competition_id'] = competition.id
             data['team_id'] = None
             data['is_referee'] = None
         return JsonResponse(data)
@@ -96,5 +98,10 @@ class RegisterView(CreateView):  # pylint: disable=too-many-ancestors
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
+        user = form.save()
 
+        basic_group = Group.objects.get(name='Basic')
+        user.groups.add(basic_group)
+
+        # user.save()
         return super().form_valid(form)

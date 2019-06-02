@@ -8,17 +8,16 @@ const button = document.getElementById('toggle');
 // const canvastest1 = document.getElementById('test-canvas1');
 // const canvastest2 = document.getElementById('test-canvas2');
 // const canvastest3 = document.getElementById('test-canvas3');
-// const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
-// 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-// 		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
-// 		  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
-// 		  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
-// 		  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-// 		  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
-// 		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
-// 		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
-//           '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
-const colorArray = ['#ff00f0', '#21ff00', '#f7ff00'];
+const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
+		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
+		  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+		  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
+		  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+		  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
+		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
+          '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
 
 class Manager {
     constructor() {
@@ -26,9 +25,10 @@ class Manager {
         this.scene = new THREE.Scene();
         this.renderer = new THREE.WebGLRenderer();
         this.yachts = [];
+        this.marks = [];
         this.replay = new Replay(this);
         this.usedColors = [];
-        this.path = null;
+
         this.animate = this.animate.bind(this);
 
         this.loader = new THREE.OBJLoader();
@@ -87,7 +87,8 @@ class Manager {
                 temp.addYacht(mesh);
                 temp.yacht.name = obj['team_name'];
                 temp.calcPath(Algorithm.cleanUpGpsData(gpsData, obj['id']));
-                this.path = obj;
+
+
                 if(temp.path.length != 0) {
                     let rnd = Math.floor(Math.random() * colorArray.length);
 
@@ -97,40 +98,33 @@ class Manager {
                     temp.color = rnd;
 
                     temp.id = this.yachts.length;
-                    temp.yacht.scale.set(2, 2, 2);
-                    this.path = temp.path.slice();
                     this.yachts.push(temp);
                     this.yachts[this.yachts.length - 1].addToScene();
                     this.yachts[this.yachts.length - 1].moveYachtInit();
-                    this.yachts[this.yachts.length - 1].initTrail();
-                    
                 }
-                // console.log(this.yachts.length);
-                ////////////////////////////
-                else if (this.yachts.length == 2)
-                {
-                    console.log(temp.path.length);
-                    let rnd = Math.floor(Math.random() * colorArray.length);
-
-                    while(this.usedColors.includes(rnd))
-                        rnd = Math.floor(Math.random() * colorArray.length);
-                    this.usedColors.push(rnd);
-                    temp.color = rnd;
-                    temp.calcPath(Algorithm.cleanUpGpsData(gpsData, 1), true);
-                    // temp.path.forEach((pos, i)=>{
-                    //     temp.path[i].x += Algorithm.getRandom(100,200);
-                    //     temp.path[i].y += Algorithm.getRandom(100,200);
-                    // });
-                    temp.id = this.yachts.length;
-                    temp.yacht.scale.set(2, 2, 2);
-                    this.yachts.push(temp);
-                    this.yachts[this.yachts.length - 1].addToScene();
-                    this.yachts[this.yachts.length - 1].moveYachtInit();
-                    this.yachts[this.yachts.length - 1].initTrail();
-                    // this.path = temp.path;
-                }
-                //////////////////////////
-                console.log(temp.path);
+                if (callback !== null) callback();
+            });
+    }
+    loadMark(objLoc, pos, callback = null){
+        let material = new THREE.MeshPhongMaterial({
+            color: 0xE6331A,
+            wireframe: false
+        });
+        this.loader.load(
+            objLoc,
+            (object) => {
+                let mesh = null;
+                object.traverse((obj) => {
+                    if (obj instanceof THREE.Mesh) {
+                        obj.material = material;
+                        mesh = obj;
+                    }
+                });
+                mesh.rotation.x = -Math.PI / 2;
+                mesh.position.set(pos.x, 0, -1*pos.y);
+                mesh.scale.set(5, 5, 5);
+                manage.scene.add(mesh);
+                this.marks.push(mesh);
                 if (callback !== null) callback();
             });
     }

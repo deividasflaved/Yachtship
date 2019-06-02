@@ -157,7 +157,7 @@ DATE_INPUT_FORMATS = [
 LOGIN_URL = 'auth:login'
 LOGOUT_URL = 'auth:logout'
 LOGIN_REDIRECT_URL = 'events:list'
-LOGOUT_REDIRECT_URL = 'auth:login'
+LOGOUT_REDIRECT_URL = 'events:list'
 
 
 # Media files

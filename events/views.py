@@ -122,7 +122,7 @@ class APIGpsCoordinatesPointsView(LoginRequiredMixin, View):
         Custom post function
         """
         # TODO think of a way to pass pk from android APP pylint: disable=fixme
-        race = get_object_or_404(self.model, pk=1)
+        race = get_object_or_404(self.model, pk=5)
         form = RaceFormAPI(request.POST, instance=race)
         if form.is_valid():
             form.save()
@@ -181,11 +181,20 @@ class ReplayView(View):
         teams = event.teams.all()
         coordinates = self.model.objects.filter(time__range=[race.start_date, race.start_date + race.duration])
         data = list(self.model.objects.values())
+        race_data = {
+            'start': race.start_coordinates,
+            'finish': race.finish_coordinates,
+            'checkpoint': race.checkpoint_coordinates,
+            'referee': race.referee_coordinates,
+            'start_date': race.start_date
+        }
         context = {
             'coordinates': json.dumps(data, cls=DjangoJSONEncoder), #Testavimui veliau istrinti
             # 'coordinates': json.dumps(list(coordinates.values()), cls=DjangoJSONEncoder),
-            'teams': json.dumps(list(teams.values()))
+            'teams': json.dumps(list(teams.values())),
+            'race': json.dumps(race_data, cls=DjangoJSONEncoder)
         }
+        # print(race.start_date)
         # js_data = serializers.serialize('json', queryset)
         # js_data = js_data.replace('\\"', "\"")
         # json.loads(js_data)
@@ -212,7 +221,7 @@ class ReplayData(View):
         return JsonResponse(data, safe=False)
 
 
-class EventListView(LoginRequiredMixin, ListView):  # pylint: disable=too-many-ancestors
+class EventListView(ListView):  # pylint: disable=too-many-ancestors
     """
     Returns events list
     """
@@ -234,7 +243,7 @@ class EventOlderListView(EventListView):  # pylint: disable=too-many-ancestors
         return queryset.exclude(event_date__year=date.today().year)
 
 
-class EventDetailView(LoginRequiredMixin, DetailView):  # pylint: disable=too-many-ancestors
+class EventDetailView(DetailView):  # pylint: disable=too-many-ancestors
     """
     Returns chosen event details
     """
@@ -242,7 +251,8 @@ class EventDetailView(LoginRequiredMixin, DetailView):  # pylint: disable=too-ma
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['team'] = self.request.user.user_teams.all().filter(event=self.object)
+        if self.request.user.is_authenticated:
+            context['team'] = self.request.user.user_teams.all().filter(event=self.object)
         return context
 
 
@@ -355,7 +365,7 @@ class RaceUpdateView(LoginRequiredMixin, UpdateView):  # pylint: disable=too-man
         return reverse(self.success_url, kwargs={'pk': competition_pk})
 
 
-class CompetitionDetailView(LoginRequiredMixin, DetailView):  # pylint: disable=too-many-ancestors
+class CompetitionDetailView(DetailView):  # pylint: disable=too-many-ancestors
     """
     Returns selected competition details
     """

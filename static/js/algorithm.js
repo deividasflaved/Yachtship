@@ -32,7 +32,11 @@ class Algorithm {
     static getXY(pos_lat, pos_lon) {
         return {
             x: center_x + ((pos_lon - defLon) / dpp),
-            y: center_y - ((pos_lat - defLat) / dpp)
+            y: center_y - ((pos_lat - defLat) / dpp) //too much to change thus will leave this one for a while
+            // y: center_y + ((pos_lat - defLat) / dpp) //correct one
+            // y = cy - (pl/dpp - dl/dpp)
+            //y-cy+(d1/dpp)= -
+            // cy-y-d1/dpp
         };
     }
     static getLonLat(x, y) {
@@ -138,6 +142,11 @@ class Algorithm {
             tr.childNodes[0].innerText = i + 1;
             tr.parentNode.appendChild(tr);
         });
+    }
+
+    static raceGpsToXY(input){
+        let temp = input.split(";");
+        return this.getXY(temp[0], temp[1]);
     }
 
     static gapToLeader(obj){
