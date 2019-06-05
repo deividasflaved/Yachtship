@@ -1,5 +1,7 @@
-const defLat = 54.911565;
-const defLon = 23.930066;
+// const defLat = 54.911565;
+// const defLon = 23.930066;
+const defLat = 59.774832;
+const defLon = 23.043725;
 const center_x = 0;
 const center_y = 0;
 const dpp = 0.000005;
@@ -32,7 +34,7 @@ class Algorithm {
     static getXY(pos_lat, pos_lon) {
         return {
             x: center_x + ((pos_lon - defLon) / dpp),
-            y: center_y - ((pos_lat - defLat) / dpp) //too much to change thus will leave this one for a while
+            y: center_y + ((pos_lat - defLat) / dpp) //too much to change thus will leave this one for a while
             // y: center_y + ((pos_lat - defLat) / dpp) //correct one
             // y = cy - (pl/dpp - dl/dpp)
             //y-cy+(d1/dpp)= -
@@ -146,7 +148,12 @@ class Algorithm {
 
     static raceGpsToXY(input){
         let temp = input.split(";");
-        return this.getXY(temp[0], temp[1]);
+        if(temp.length<3){
+            return this.getXY(temp[0], temp[1]);}
+        else{
+            return {checkpoint1: this.getXY(temp[0], temp[1]),
+            checkpoint2: this.getXY(temp[2], temp[3])};
+        }
     }
 
     static gapToLeader(obj){

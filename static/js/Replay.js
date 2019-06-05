@@ -3,6 +3,7 @@
 // const x1 = 641.87026016711;
 // const y1 = -2221.313902258259;
 
+
 class Replay {
     constructor(manager) {
         this.manager = manager;
@@ -23,7 +24,11 @@ class Replay {
         this.trArray = [];
         this.gapArray = [];
         this.stageOfYacht = [];
-        this.trailLenght = 60 / 5; // real time seconds / saving entry
+        this.checkpointLine = [];
+        this.points = [];
+        this.angle = null;
+        this.max = 0;
+        this.trailLenght = 180 / 5; // real time seconds / saving entry
     }
 
     initSpeedElems() {
@@ -40,17 +45,36 @@ class Replay {
             this.gapArray.push(elem);
 
             this.stageOfYacht.push(0);
+            let stage = 0;
+            yacht.path.forEach((elem, i)=>{
+                if(i != 0) {
+                    if(yacht.path[i].stageOfYacht % 2 == 0){
+                        if(Algorithm.calcDistToLine(new THREE.Vector3(yacht.path[i].x, 0, yacht.path[i].y),
+                                new THREE.Vector3(this.checkpointLine['x1'], 0, this.checkpointLine['y1']*(-1)),
+                                new THREE.Vector3(this.checkpointLine['x2'], 0, this.checkpointLine['y2']*(-1))) <= 5) {
+                            for(let j = i; j<yacht.path.length; j++)
+                                yacht.path[j].stageOfYacht++;
+                        }
+                    }
+                    else if(yacht.path[i].stageOfYacht % 2 == 1){
+                        if(Algorithm.calcDistToLine(new THREE.Vector3(yacht.path[i].x, 0, yacht.path[i].y),
+                                new THREE.Vector3(this.checkpointLine['x3'], 0, this.checkpointLine['y3']*(-1)),
+                                new THREE.Vector3(this.checkpointLine['x4'], 0, this.checkpointLine['y4']*(-1))) <= 5) {
+                            for(let j = i; j<yacht.path.length; j++)
+                                yacht.path[j].stageOfYacht++;
+                        }
+                    }
+                }
+            });
         });
         this.speedArray[this.leader.id].innerText = 0;
+        this.loop();
     }
-
     drawLine(yacht) {
-        let angle = Algorithm.getAngle({x: x1, y: y1}, {x: x, y: y}) + 1.5708;
-        let new_x1 = yacht.position.x + 3000 * Math.cos((angle * 180 / Math.PI) * Math.PI / 180);
-        let new_x2 = yacht.position.x - 3000 * Math.cos((angle * 180 / Math.PI) * Math.PI / 180);
-        let new_y1 = yacht.position.z + 3000 * Math.sin((angle * 180 / Math.PI) * Math.PI / 180);
-        let new_y2 = yacht.position.z - 3000 * Math.sin((angle * 180 / Math.PI) * Math.PI / 180);
-
+        let new_x1 = yacht.position.x + 3000 * Math.cos((this.angle * 180 / Math.PI) * Math.PI / 180);
+        let new_x2 = yacht.position.x - 3000 * Math.cos((this.angle * 180 / Math.PI) * Math.PI / 180);
+        let new_y1 = yacht.position.z + 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
+        let new_y2 = yacht.position.z - 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
         manage.scene.remove(this.line);
 
         this.geometry = new THREE.Geometry();
@@ -63,9 +87,14 @@ class Replay {
 
     initPoints(){
         if(race['start'] != null) {
-            manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['start']), () => console.log('start done'));
-            manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['finish']), () => console.log('finish done'));
-            manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['referee']), () => {
+            this.points['start'] = Algorithm.raceGpsToXY(race['start']);
+            this.points['finish'] = Algorithm.raceGpsToXY(race['finish']);
+            this.points['referee'] = Algorithm.raceGpsToXY(race['referee']);
+            this.points['checkpoint'] = Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint1'];
+            this.points['checkpoint2'] = Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint2'];
+            manage.loadMark(filesLoc + "mark.obj", this.points['start'], () => console.log('start done'));
+            manage.loadMark(filesLoc + "mark.obj", this.points['finish'], () => console.log('finish done'));
+            manage.loadMark(filesLoc + "mark.obj", this.points['referee'], () => {
                 let geometry = new THREE.Geometry();
                 let material = new THREE.LineBasicMaterial({color: 0xFF0000});
                 geometry.vertices.push(new THREE.Vector3(manage.marks[0].position.x, 2, manage.marks[0].position.z));
@@ -79,8 +108,40 @@ class Replay {
                 line = new THREE.Line(geometry, material);
                 manage.scene.add(line);
             });
-            manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['checkpoint']), () => console.log('checkpoint done'));
+            manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint1']);
+            manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint2']);
+
+            this.points['checkpoint'].y *= -1;
+            this.points['checkpoint2'].y *= -1;
+
+            let midpointX = (this.points['start'].x + this.points['referee'].x)/2;
+            let midpointY = (this.points['start'].y + this.points['referee'].y)/2;
+            this.angle = Algorithm.getAngle({x: this.points['checkpoint2'].x, y: this.points['checkpoint2'].y}, {x: this.points['checkpoint'].x, y: this.points['checkpoint'].y});
+
+
+            this.checkpointLine['x1'] = this.points['checkpoint'].x + 3000 * Math.cos((this.angle * 180 / Math.PI) * Math.PI / 180);
+            this.checkpointLine['x2'] = this.points['checkpoint'].x - 3000 * Math.cos((this.angle * 180 / Math.PI) * Math.PI / 180);
+            this.checkpointLine['y1'] = this.points['checkpoint'].y + 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
+            this.checkpointLine['y2'] = this.points['checkpoint'].y - 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
+
+            this.checkpointLine['x3'] = this.points['checkpoint2'].x + 3000 * Math.cos((this.angle * 180 / Math.PI) * Math.PI / 180);
+            this.checkpointLine['x4'] = this.points['checkpoint2'].x - 3000 * Math.cos((this.angle * 180 / Math.PI) * Math.PI / 180);
+            this.checkpointLine['y3'] = this.points['checkpoint2'].y + 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
+            this.checkpointLine['y4'] = this.points['checkpoint2'].y - 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
+
+            this.angle = Algorithm.getAngle({x: this.points['checkpoint2'].x, y: this.points['checkpoint2'].y}, {x: this.points['checkpoint'].x, y: this.points['checkpoint'].y}) + 1.4331239;
+            ///////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////
+            // for(let i = 79; i<150;i++){
+            //     manage.yachts[0].path[i]=JSON.parse(JSON.stringify(manage.yachts[0].path[i-1]));
+            //     manage.yachts[0].path[i].y-=50;
+            // }
+            ///////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////
         }
+        this.initSpeedElems();
 
         // let geometry = new THREE.Geometry();
         // geometry.vertices.push(new THREE.Vector3(start.position))
@@ -117,33 +178,84 @@ class Replay {
                         yacht.path[roundedTime].y, yacht.path[roundedTime + 1].x,
                         yacht.path[roundedTime + 1].y) * 100)) / 100;
                     // console.log(yacht.path[roundedTime].a, Algorithm.getAngle(yacht.path[roundedTime], {x: x, y: y}), Algorithm.getAngle(yacht.path[roundedTime], {x: x1, y: y1}));
-                    if (this.stageOfYacht[yacht.id] % 2 == 0 && this.leader.path[roundedTime] != null) {
-                        this.getLeader(yacht, roundedTime)
+                    if (yacht.path[roundedTime].stageOfYacht % 2 == 0 && this.leader.path[roundedTime] != null && this.max == yacht.path[roundedTime].stageOfYacht) {
+                        // console.log(this.max + " bbbbbbbbbb")
+                        this.getLeaderCheckpoint(yacht, roundedTime);
                     }
-                    this.drawLine(this.leader.yacht);
+                    //TODO sutvarkyti spalvu masyva
+                    //TODO pasiruosti skaidres
+                    if (yacht.path[roundedTime].stageOfYacht % 2 == 1 && this.leader.path[roundedTime] != null && this.max == yacht.path[roundedTime].stageOfYacht) {
+                        // console.log(this.max + " bbbbbbbbbb")
+                        this.getLeaderStart(yacht, roundedTime);
+                    }
+                    if(this.points.checkpoint != null)
+                        this.drawLine(this.leader.yacht);
                     if (this.roundedTimePast != roundedTime) {
                         this.drawTrail(yacht, roundedTime);
                     }
-                    if (yacht != this.leader && this.roundedTimePast != roundedTime) {
-                        this.gapArray[yacht.id].innerText = Algorithm.calcDistToLine(yacht.yacht.position, this.geometry.vertices[0], this.geometry.vertices[1]);
+                    if (yacht != this.leader && this.roundedTimePast != roundedTime && this.points.checkpoint != null) {
+
+                        manage.yachts.forEach((yachtt)=>{
+                            if(yachtt.path[roundedTime].stageOfYacht>this.max)
+                                this.max = yachtt.path[roundedTime].stageOfYacht;
+                        });
+                        if(this.max == yacht.path[roundedTime].stageOfYacht)
+                            this.gapArray[yacht.id].innerText = Algorithm.calcDistToLine(yacht.yacht.position, this.geometry.vertices[0], this.geometry.vertices[1]);
+                        else if(this.max % 2 == 1)
+                            this.gapArray[yacht.id].innerText = Algorithm.roundNumber(Algorithm.calcDistToLine(new THREE.Vector3(this.points['checkpoint'].x,0,this.points['checkpoint'].y*(-1)), this.geometry.vertices[0], this.geometry.vertices[1]) +
+                                Algorithm.getDistance(yacht.yacht.position.x,yacht.yacht.position.z,this.points['checkpoint'].x,this.points['checkpoint'].y*(-1)));
+                        else if(this.max % 2 == 0)
+                            this.gapArray[yacht.id].innerText = Algorithm.roundNumber(Algorithm.calcDistToLine(new THREE.Vector3(this.points['checkpoint2'].x,0,this.points['checkpoint2'].y*(-1)), this.geometry.vertices[0], this.geometry.vertices[1]) +
+                                Algorithm.getDistance(yacht.yacht.position.x,yacht.yacht.position.z,this.points['checkpoint2'].x,this.points['checkpoint2'].y*(-1)));
+
                         Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
                     }
-
                     // if(Algorithm.calcDistToLine(new THREE.Vector3(x, 0, y), this.geometry.vertices[0], this.geometry.vertices[1])< 2) {
                     //     this.movingToCheckpoint = false;
                     //     console.log(Algorithm.calcDistToLine(new THREE.Vector3(x, 0, y), this.geometry.vertices[0], this.geometry.vertices[1]))
                     // }
                 }
-        });
+            // console.log();
+            });
         this.slider.value = this.clock.getElapsedTime() / this.duration[this.currentSpeed] * 100;
         this.elapsedTimeTxt.innerText = "Elapsed:\n" + Algorithm.formatTime(Math.floor(this.clock.getElapsedTime() * 5 / this.duration[this.currentSpeed]));
         this.roundedTimePast = roundedTime;
         requestAnimationFrame(this.loop);
     }
 
-    getLeader(yacht, i) {
+    getLeaderCheckpoint(yacht, i) {
 
-        if (Algorithm.getDistance(this.leader.path[i].x, this.leader.path[i].y, x, y) > Algorithm.getDistance(yacht.path[i].x, yacht.path[i].y, x, y)) {
+        if (Algorithm.calcDistToLine(new THREE.Vector3(this.leader.path[i].x, 0, this.leader.path[i].y),
+                                new THREE.Vector3(this.checkpointLine['x1'], 0, this.checkpointLine['y1']*(-1)),
+                                new THREE.Vector3(this.checkpointLine['x2'], 0, this.checkpointLine['y2']*(-1)))
+                                                            >
+            Algorithm.calcDistToLine(new THREE.Vector3(yacht.path[i].x, 0, yacht.path[i].y),
+                                new THREE.Vector3(this.checkpointLine['x1'], 0, this.checkpointLine['y1']*(-1)),
+                                new THREE.Vector3(this.checkpointLine['x2'], 0, this.checkpointLine['y2']*(-1)))) {
+            this.leader = yacht;
+            this.gapArray[this.leader.id].innerText = 0;
+            Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
+        }
+
+        // if (Algorithm.getDistance(this.leader.path[i].x, this.leader.path[i].y, x1, y1 ) > Algorithm.getDistance(yacht.path[i].x, yacht.path[i].y, x1, y1 )) {
+        //     this.leader = yacht;
+        //     this.gapArray[this.leader.id].innerText = 0;
+        //     Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
+        // }
+        // TODO check later
+    }
+    getLeaderStart(yacht, i) {
+        let midpointX = (this.points['start'].x + this.points['referee'].x)/2;
+        let midpointY = (this.points['start'].y + this.points['referee'].y)/2;
+        // if(Algorithm.calcDistToLine(yacht.yacht.position, new THREE.Vector3(this.points['start'].x,0, this.points['start'].y), new THREE.Vector3(this.points['referee'].x,0, this.points['referee'].y)) <
+        // Algorithm.calcDistToLine(this.leader.yacht.position, new THREE.Vector3(this.points['start'].x,0, this.points['start'].y), new THREE.Vector3(this.points['referee'].x,0, this.points['referee'].y))){
+        if (Algorithm.calcDistToLine(new THREE.Vector3(this.leader.path[i].x, 0, this.leader.path[i].y),
+                                new THREE.Vector3(this.checkpointLine['x3'], 0, this.checkpointLine['y3']*(-1)),
+                                new THREE.Vector3(this.checkpointLine['x4'], 0, this.checkpointLine['y4']*(-1)))
+                                                            >
+            Algorithm.calcDistToLine(new THREE.Vector3(yacht.path[i].x, 0, yacht.path[i].y),
+                                new THREE.Vector3(this.checkpointLine['x3'], 0, this.checkpointLine['y3']*(-1)),
+                                new THREE.Vector3(this.checkpointLine['x4'], 0, this.checkpointLine['y4']*(-1)))) {
             this.leader = yacht;
             this.gapArray[this.leader.id].innerText = 0;
             Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
@@ -186,5 +298,8 @@ class Replay {
 
         this.elapsed = this.clock.getElapsedTime() * temp;
         this.clock.elapsedTime = this.clock.getElapsedTime() * temp;
+    }
+    getCurrentSpeed(){
+        return 5/this.duration[this.currentSpeed];
     }
 }

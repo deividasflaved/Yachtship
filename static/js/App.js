@@ -26,10 +26,9 @@ for (let i = 0; i < yachtsCount; i++) {
         manage.loadObject(filesLoc + "yacht2.obj", teams[i],() =>
         {
             manage.test();
-            // manage.test2()
-            manage.replay.initSpeedElems();
-            manage.replay.loop();
+            // manage.test2(
             manage.replay.initPoints();
+            // manage.replay.initSpeedElems();
 
             btn.addEventListener('click', () => {
                 if(!manage.replay.paused){
@@ -46,6 +45,7 @@ for (let i = 0; i < yachtsCount; i++) {
             });
             btn2.addEventListener('click', () => {
                 manage.replay.changeSpeed();
+                btn2.innerText = "Change speed: x" + manage.replay.getCurrentSpeed();
             });
         });
     else

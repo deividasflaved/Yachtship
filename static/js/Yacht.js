@@ -8,6 +8,7 @@ class Yacht {
         this.t = 0, this.dt = 0.01;
         this.startTime = 0; this.duration = 5000;
         this.trail = null;
+        this.directionToCheckpoint = true;
         // this.counter = 0;
     }
 
@@ -45,6 +46,7 @@ class Yacht {
         for (let i = 0; i < gpsData.length; i++) {
             path[i] = Algorithm.getXY(gpsData[i].latitude, gpsData[i].longitude);
             path[i].time = gpsData[i].time;
+            path[i].stageOfYacht = 0;
             if (i !== 0)
                 path[i].a = Algorithm.getAngle(path[i - 1], path[i]);
         }
