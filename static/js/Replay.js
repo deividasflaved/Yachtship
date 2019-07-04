@@ -94,7 +94,9 @@ class Replay {
             this.points['checkpoint2'] = Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint2'];
             manage.loadMark(filesLoc + "mark.obj", this.points['start'], () => console.log('start done'));
             manage.loadMark(filesLoc + "mark.obj", this.points['finish'], () => console.log('finish done'));
+
             manage.loadMark(filesLoc + "mark.obj", this.points['referee'], () => {
+
                 let geometry = new THREE.Geometry();
                 let material = new THREE.LineBasicMaterial({color: 0xFF0000});
                 geometry.vertices.push(new THREE.Vector3(manage.marks[0].position.x, 2, manage.marks[0].position.z));
@@ -107,6 +109,7 @@ class Replay {
                 geometry.vertices.push(new THREE.Vector3(manage.marks[2].position.x, 2, manage.marks[2].position.z));
                 line = new THREE.Line(geometry, material);
                 manage.scene.add(line);
+
             });
             manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint1']);
             manage.loadMark(filesLoc + "mark.obj", Algorithm.raceGpsToXY(race['checkpoint'])['checkpoint2']);
@@ -114,8 +117,6 @@ class Replay {
             this.points['checkpoint'].y *= -1;
             this.points['checkpoint2'].y *= -1;
 
-            let midpointX = (this.points['start'].x + this.points['referee'].x)/2;
-            let midpointY = (this.points['start'].y + this.points['referee'].y)/2;
             this.angle = Algorithm.getAngle({x: this.points['checkpoint2'].x, y: this.points['checkpoint2'].y}, {x: this.points['checkpoint'].x, y: this.points['checkpoint'].y});
 
 
@@ -130,22 +131,9 @@ class Replay {
             this.checkpointLine['y4'] = this.points['checkpoint2'].y - 3000 * Math.sin((this.angle * 180 / Math.PI) * Math.PI / 180);
 
             this.angle = Algorithm.getAngle({x: this.points['checkpoint2'].x, y: this.points['checkpoint2'].y}, {x: this.points['checkpoint'].x, y: this.points['checkpoint'].y}) + 1.4331239;
-            ///////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////
-            // for(let i = 79; i<150;i++){
-            //     manage.yachts[0].path[i]=JSON.parse(JSON.stringify(manage.yachts[0].path[i-1]));
-            //     manage.yachts[0].path[i].y-=50;
-            // }
-            ///////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////
-            ///////////////////////////////////////////////////////////////////////////////////////
         }
         this.initSpeedElems();
 
-        // let geometry = new THREE.Geometry();
-        // geometry.vertices.push(new THREE.Vector3(start.position))
-        // console.log();
     }
 
 
@@ -173,19 +161,14 @@ class Replay {
             if (yacht.path.length > 0)
                 if (yacht.path[roundedTime] != null && yacht.path[roundedTime + 1] != null) {
                     yacht.moveYacht(yacht.path[roundedTime], yacht.path[roundedTime + 1], t);
-                    //TODO if yachts arent the first ones moving might cause issues
                     this.speedArray[yacht.id].innerText = Math.round(Algorithm.convertSpeedToKnots(Algorithm.calcSpeed(yacht.path[roundedTime].x,
                         yacht.path[roundedTime].y, yacht.path[roundedTime + 1].x,
                         yacht.path[roundedTime + 1].y) * 100)) / 100;
-                    // console.log(yacht.path[roundedTime].a, Algorithm.getAngle(yacht.path[roundedTime], {x: x, y: y}), Algorithm.getAngle(yacht.path[roundedTime], {x: x1, y: y1}));
                     if (yacht.path[roundedTime].stageOfYacht % 2 == 0 && this.leader.path[roundedTime] != null && this.max == yacht.path[roundedTime].stageOfYacht) {
-                        // console.log(this.max + " bbbbbbbbbb")
                         this.getLeaderCheckpoint(yacht, roundedTime);
                     }
-                    //TODO sutvarkyti spalvu masyva
-                    //TODO pasiruosti skaidres
+
                     if (yacht.path[roundedTime].stageOfYacht % 2 == 1 && this.leader.path[roundedTime] != null && this.max == yacht.path[roundedTime].stageOfYacht) {
-                        // console.log(this.max + " bbbbbbbbbb")
                         this.getLeaderStart(yacht, roundedTime);
                     }
                     if(this.points.checkpoint != null)
@@ -210,12 +193,7 @@ class Replay {
 
                         Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
                     }
-                    // if(Algorithm.calcDistToLine(new THREE.Vector3(x, 0, y), this.geometry.vertices[0], this.geometry.vertices[1])< 2) {
-                    //     this.movingToCheckpoint = false;
-                    //     console.log(Algorithm.calcDistToLine(new THREE.Vector3(x, 0, y), this.geometry.vertices[0], this.geometry.vertices[1]))
-                    // }
                 }
-            // console.log();
             });
         this.slider.value = this.clock.getElapsedTime() / this.duration[this.currentSpeed] * 100;
         this.elapsedTimeTxt.innerText = "Elapsed:\n" + Algorithm.formatTime(Math.floor(this.clock.getElapsedTime() * 5 / this.duration[this.currentSpeed]));
@@ -237,18 +215,8 @@ class Replay {
             Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
         }
 
-        // if (Algorithm.getDistance(this.leader.path[i].x, this.leader.path[i].y, x1, y1 ) > Algorithm.getDistance(yacht.path[i].x, yacht.path[i].y, x1, y1 )) {
-        //     this.leader = yacht;
-        //     this.gapArray[this.leader.id].innerText = 0;
-        //     Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
-        // }
-        // TODO check later
     }
     getLeaderStart(yacht, i) {
-        let midpointX = (this.points['start'].x + this.points['referee'].x)/2;
-        let midpointY = (this.points['start'].y + this.points['referee'].y)/2;
-        // if(Algorithm.calcDistToLine(yacht.yacht.position, new THREE.Vector3(this.points['start'].x,0, this.points['start'].y), new THREE.Vector3(this.points['referee'].x,0, this.points['referee'].y)) <
-        // Algorithm.calcDistToLine(this.leader.yacht.position, new THREE.Vector3(this.points['start'].x,0, this.points['start'].y), new THREE.Vector3(this.points['referee'].x,0, this.points['referee'].y))){
         if (Algorithm.calcDistToLine(new THREE.Vector3(this.leader.path[i].x, 0, this.leader.path[i].y),
                                 new THREE.Vector3(this.checkpointLine['x3'], 0, this.checkpointLine['y3']*(-1)),
                                 new THREE.Vector3(this.checkpointLine['x4'], 0, this.checkpointLine['y4']*(-1)))
@@ -260,13 +228,6 @@ class Replay {
             this.gapArray[this.leader.id].innerText = 0;
             Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
         }
-
-        // if (Algorithm.getDistance(this.leader.path[i].x, this.leader.path[i].y, x1, y1 ) > Algorithm.getDistance(yacht.path[i].x, yacht.path[i].y, x1, y1 )) {
-        //     this.leader = yacht;
-        //     this.gapArray[this.leader.id].innerText = 0;
-        //     Algorithm.formatTable(Algorithm.bubbleSort(this.trArray));
-        // }
-        // TODO check later
     }
 
     stopLoop() {

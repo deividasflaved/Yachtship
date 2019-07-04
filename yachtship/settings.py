@@ -91,13 +91,15 @@ WSGI_APPLICATION = 'yachtship.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'deividux652$yachtship',
-        'USER': 'deividux652',
-        'PASSWORD': 'D19970529s',
-        'HOST': 'deividux652.mysql.pythonanywhere-services.com',
+        'NAME': 'yachtship',
+        # NOTE: Update MySQL user credentials with user
+        # (which can access django_test database) credentials
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        },
+        }
     }
 }
 

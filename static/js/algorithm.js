@@ -1,5 +1,3 @@
-// const defLat = 54.911565;
-// const defLon = 23.930066;
 const defLat = 59.774832;
 const defLon = 23.043725;
 const center_x = 0;
@@ -35,10 +33,6 @@ class Algorithm {
         return {
             x: center_x + ((pos_lon - defLon) / dpp),
             y: center_y + ((pos_lat - defLat) / dpp) //too much to change thus will leave this one for a while
-            // y: center_y + ((pos_lat - defLat) / dpp) //correct one
-            // y = cy - (pl/dpp - dl/dpp)
-            //y-cy+(d1/dpp)= -
-            // cy-y-d1/dpp
         };
     }
     static getLonLat(x, y) {
@@ -89,9 +83,7 @@ class Algorithm {
     // Output like "1:01" or "4:03:59" or "123:03:59"
     let ret = "";
 
-    // if (hrs > 0) {
-        ret += (hrs < 10 ? "0" : "") + hrs + ":" + (mins < 10 ? "0" : "");
-    // }
+    ret += (hrs < 10 ? "0" : "") + hrs + ":" + (mins < 10 ? "0" : "");
 
     ret += "" + mins + ":" + (secs < 10 ? "0" : "");
     ret += "" + secs;
@@ -156,7 +148,4 @@ class Algorithm {
         }
     }
 
-    static gapToLeader(obj){
-
-    }
 }

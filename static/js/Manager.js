@@ -1,25 +1,10 @@
 const doc = document.getElementById('start');
-// const filesLoc = "http://127.0.0.1:8000/static/other/";
-// const filesLoc = "http://192.168.1.187:8000/static/other/";
 const filesLoc = window.location.protocol + "//" + window.location.host + "/static/other/";
 const canvasId = "canvas";
 const sidebar = document.getElementById('sidebar');
 const button = document.getElementById('toggle');
-// const canvastest1 = document.getElementById('test-canvas1');
-// const canvastest2 = document.getElementById('test-canvas2');
-// const canvastest3 = document.getElementById('test-canvas3');
-// const colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
-// 		  '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-// 		  '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
-// 		  '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
-// 		  '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
-// 		  '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-// 		  '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
-// 		  '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
-// 		  '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
-//           '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
-const colorArray = ['#e6194B', '#f58231', '#ffe119', '#bfef45',
-    '#f032e6','#9A6324'];
+const colorArray = ['#e6194B', '#f58231', '#ffe119',
+    '#bfef45', '#f032e6','#9A6324'];
 
 class Manager {
     constructor() {
@@ -161,97 +146,97 @@ class Manager {
                 // '\n' + yacht.yacht.name;
         });
     }
-    test2() {
-        //test
-        this.a = [
-            [],
-            []
-        ];
-        this.b = [
-            [],
-            []
-        ];
-        this.counter = 0;
-        //test
-        let ctx = canvastest1.getContext("2d");
-        ctx.canvas.width = window.innerWidth * 0.9;
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        ctx.beginPath();
-        ctx.moveTo(30, 75);
-        for (let i = 1; i < 26; i++) {
-            let x = Algorithm.getRandom(50 * i, 50 * (i + 1));
-            let y = Algorithm.getRandom(10, 130);
-            ctx.lineTo(x, y);
-            this.a[0].push(x);
-            this.a[1].push(y);
-        }
-
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(30, 100);
-        for (let i = 1; i < 26; i++) {
-            let x = Algorithm.getRandom(50 * i, 50 * (i + 1));
-            let y = Algorithm.getRandom(10, 130);
-            ctx.lineTo(x, y);
-            this.b[0].push(x);
-            this.b[1].push(y);
-        }
-        ctx.strokeStyle = 'red';
-        ctx.setLineDash([5, 3]);
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        ctx = canvastest2.getContext("2d");
-        ctx.canvas.width = window.innerWidth*0.9;
-        // ctx.moveTo(100, 10);
-        // ctx.lineTo(150, 100);
-        // ctx.lineTo(300,20);
-        // ctx.lineTo(800,70);
-        // ctx.stroke(); 
-
-        ctx = canvastest3.getContext("2d");
-        ctx.canvas.width = window.innerWidth*0.9;
-        // ctx.moveTo(100, 10);
-        // ctx.lineTo(200, 100);
-        // ctx.lineTo(300,100);
-        // ctx.lineTo(500,70);
-        // ctx.stroke(); 
-    }
-    test3() {
-        let ctx = canvastest1.getContext("2d");
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-        ctx.beginPath();
-        ctx.moveTo(30, 75);
-        for (let i = 1; i < 26; i++) {
-            ctx.lineTo(this.a[0][i - 1], this.a[1][i - 1]);
-        }
-
-        ctx.strokeStyle = 'blue';
-        ctx.lineWidth = 3;
-        ctx.setLineDash([]);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(30, 100);
-        for (let i = 1; i < 26; i++) {
-            ctx.lineTo(this.b[0][i - 1], this.b[1][i - 1]);
-        }
-        ctx.strokeStyle = 'red';
-        ctx.setLineDash([5, 3]);
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(30 + (10 * this.counter), 0);
-        ctx.lineTo(30 + (10 * this.counter), 150);
-        ctx.strokeStyle = 'black';
-        ctx.setLineDash([5, 3]);
-        ctx.lineWidth = 3;
-        ctx.stroke();
-        this.counter++;
-    }
+    // test2() {
+    //     //test
+    //     this.a = [
+    //         [],
+    //         []
+    //     ];
+    //     this.b = [
+    //         [],
+    //         []
+    //     ];
+    //     this.counter = 0;
+    //     //test
+    //     let ctx = canvastest1.getContext("2d");
+    //     ctx.canvas.width = window.innerWidth * 0.9;
+    //     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    //     ctx.beginPath();
+    //     ctx.moveTo(30, 75);
+    //     for (let i = 1; i < 26; i++) {
+    //         let x = Algorithm.getRandom(50 * i, 50 * (i + 1));
+    //         let y = Algorithm.getRandom(10, 130);
+    //         ctx.lineTo(x, y);
+    //         this.a[0].push(x);
+    //         this.a[1].push(y);
+    //     }
+    //
+    //     ctx.strokeStyle = 'blue';
+    //     ctx.lineWidth = 3;
+    //     ctx.stroke();
+    //
+    //     ctx.beginPath();
+    //     ctx.moveTo(30, 100);
+    //     for (let i = 1; i < 26; i++) {
+    //         let x = Algorithm.getRandom(50 * i, 50 * (i + 1));
+    //         let y = Algorithm.getRandom(10, 130);
+    //         ctx.lineTo(x, y);
+    //         this.b[0].push(x);
+    //         this.b[1].push(y);
+    //     }
+    //     ctx.strokeStyle = 'red';
+    //     ctx.setLineDash([5, 3]);
+    //     ctx.lineWidth = 3;
+    //     ctx.stroke();
+    //
+    //     ctx = canvastest2.getContext("2d");
+    //     ctx.canvas.width = window.innerWidth*0.9;
+    //     // ctx.moveTo(100, 10);
+    //     // ctx.lineTo(150, 100);
+    //     // ctx.lineTo(300,20);
+    //     // ctx.lineTo(800,70);
+    //     // ctx.stroke();
+    //
+    //     ctx = canvastest3.getContext("2d");
+    //     ctx.canvas.width = window.innerWidth*0.9;
+    //     // ctx.moveTo(100, 10);
+    //     // ctx.lineTo(200, 100);
+    //     // ctx.lineTo(300,100);
+    //     // ctx.lineTo(500,70);
+    //     // ctx.stroke();
+    // }
+    // test3() {
+    //     let ctx = canvastest1.getContext("2d");
+    //     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    //
+    //     ctx.beginPath();
+    //     ctx.moveTo(30, 75);
+    //     for (let i = 1; i < 26; i++) {
+    //         ctx.lineTo(this.a[0][i - 1], this.a[1][i - 1]);
+    //     }
+    //
+    //     ctx.strokeStyle = 'blue';
+    //     ctx.lineWidth = 3;
+    //     ctx.setLineDash([]);
+    //     ctx.stroke();
+    //
+    //     ctx.beginPath();
+    //     ctx.moveTo(30, 100);
+    //     for (let i = 1; i < 26; i++) {
+    //         ctx.lineTo(this.b[0][i - 1], this.b[1][i - 1]);
+    //     }
+    //     ctx.strokeStyle = 'red';
+    //     ctx.setLineDash([5, 3]);
+    //     ctx.lineWidth = 3;
+    //     ctx.stroke();
+    //
+    //     ctx.beginPath();
+    //     ctx.moveTo(30 + (10 * this.counter), 0);
+    //     ctx.lineTo(30 + (10 * this.counter), 150);
+    //     ctx.strokeStyle = 'black';
+    //     ctx.setLineDash([5, 3]);
+    //     ctx.lineWidth = 3;
+    //     ctx.stroke();
+    //     this.counter++;
+    // }
 }

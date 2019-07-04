@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/.idea" />
+        <option value="$PROJECT_DIR$/.vscode" />
+        <option value="$PROJECT_DIR$/events/migrations" />
+        <option value="$PROJECT_DIR$/marea/migrations" />
+        <option value="$PROJECT_DIR$/parea/migrations" />
+        <option value="$PROJECT_DIR$/pub" />
+        <option value="$PROJECT_DIR$/static/admin" />
+        <option value="$PROJECT_DIR$/static/rest_framework" />
+        <option value="$PROJECT_DIR$/static/other" />
+        <option value="$PROJECT_DIR$/../design" />
+        <option value="$PROJECT_DIR$/../in" />
+        <option value="$PROJECT_DIR$/../{backup}" />
+        <option value="$PROJECT_DIR$/static/js/lib" />
+      </list>
+    </option>
+  </component>
+</project>

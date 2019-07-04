@@ -2,9 +2,7 @@ const yachtsCount = teams.length;
 const timeToWait = yachtsCount * 500;
 
 const x = 575.971737432468;
-// const x = 1500;
 const y = 1173.3485003119881;
-// const y = -1800;
 const x1 = 641.87026016711;
 const y1 = -2221.313902258259;
 
@@ -13,8 +11,8 @@ let manage = new Manager();
 manage.initBasics();
 manage.animate();
 
-var btn = document.getElementById("play");
-var btn2 = document.getElementById("plays");
+let btn = document.getElementById("play");
+let btn2 = document.getElementById("plays");
 console.log(Algorithm.getLonLat(x, y));
 manage.replay.slider.oninput = function() {
   manage.replay.changeTime(manage.replay.slider.value / 100);
